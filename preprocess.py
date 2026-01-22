@@ -160,11 +160,7 @@ def removing_series_with_many_zeros(df,max_number_of_in_year_zero):
     series_to_remove = zero_counts[zero_counts >= max_number_of_in_year_zero].index
     
     df_filtered = df[~df['series_id'].isin(series_to_remove)]
-    ### For Testing only remove it after 
-#     series_ids_to_keep = ["col_106", "col_105"]
 
-# # Filter the DataFrame
-#     df_filtered = df_filtered[df_filtered["series_id"].isin(series_ids_to_keep)].copy()
     return df_filtered
 
 
@@ -177,7 +173,7 @@ def load_and_prepare_data(data_path, include_paydays=True,
                           include_rolling=True):
     # Load and process train
     # kind_train = 'trainset_split.csv'
-    kind_train = 'train_split_new.csv'
+    kind_train = 'train_split.csv'
     df_train = load_data(data_path, kind_train)
     df_features_train = create_feature_matrix(df_train, include_paydays, include_sin_cos)
     
@@ -185,24 +181,14 @@ def load_and_prepare_data(data_path, include_paydays=True,
     df_features_train = add_lags_and_rollings_train(df_features_train, include_lags, include_rolling)
     df_features_train = df_features_train.dropna()
     #### Validation set
-    kind_valid = 'valid_split_new.csv'
+    kind_valid = 'valid_split.csv'
     df_valid = load_data(data_path, kind_valid)
     df_features_valid = create_feature_matrix(df_valid, include_paydays, include_sin_cos)
     df_features_valid = add_lags_and_rollings(df_features_valid, df_features_train,
                                              include_lags, include_rolling)
     
     
-    ## Do the testing later so comment all the below lines
-    # Load and process test
-    # kind_test = 'testset_split.csv'
-    # df_test = load_data(data_path, kind_test)
-    # df_features_test = create_feature_matrix(df_test, include_paydays, include_sin_cos)
-    
-    # # Add lags and rollings to test (only using training data)
-    # df_features_test = add_lags_and_rollings(df_features_test, df_features_train,
-    #                                          include_lags, include_rolling)
-    # cols_to_fill = ['holiday_lag1', 'holiday_lag_minus_1', 'payday_lag1', 'payday_lag_minus_1']
-    # df_features_test[cols_to_fill] = df_features_test[cols_to_fill].fillna(0)
+
     df_features_valid.fillna(0, inplace=True)
     #df_features_train.fillna(0, inplace=True)
 
